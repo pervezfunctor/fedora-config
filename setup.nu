@@ -143,7 +143,6 @@ def "main vscode install" [] {
 def "main vscode config" [] {
   let extensions = [
     "Catppuccin.catppuccin-vsc"
-    "jnoortheen.nix-ide"
     "mads-hartmann.bash-ide-vscode"
     "TheNuProjectContributors.vscode-nushell-lang"
   ]
