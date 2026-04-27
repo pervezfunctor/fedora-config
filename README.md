@@ -21,10 +21,10 @@ setup.nu
 Available commands include:
 
 ```sh
-nu setup.nu help
-nu setup.nu niri
-nu setup.nu flatpaks
-nu setup.nu virt
+setup.nu help
+setup.nu niri
+setup.nu flatpaks
+setup.nu virt
 ```
 
 ## Dotfile layout
@@ -38,7 +38,19 @@ nu setup.nu virt
 Example:
 
 ```sh
-nu setup.nu stow niri
+setup.nu stow niri
 ```
 
 This links files from `$DOT_DIR/niri` into `~/.config/niri`.
+
+You could also install `homebrew` for linux.
+
+```bash
+setup.nu brew
+```
+
+And install packages using brew.
+
+```bash
+brew install --cask antigravity-linux
+```
