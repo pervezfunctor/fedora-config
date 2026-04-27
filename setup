@@ -58,7 +58,8 @@ pixi_install() {
 
 pixi_packages_install() {
   pixi global install bat bottom carapace direnv duf eza fd fzf gdu gh \
-    jq nushell xh ripgrep tealdeer television trash-cli zoxide starship
+    jq nushell xh ripgrep tealdeer television trash-cli zoxide starship \
+    difftastic
 
   tldr --update
 }
