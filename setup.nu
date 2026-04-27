@@ -110,6 +110,7 @@ def --env bootstrap [] {
     "bin"
     ".pixi/bin"
     ".local/bin"
+    ".opencode/bin"
   ] {
     path add ($env.HOME | path join $p)
   }
@@ -311,6 +312,16 @@ def "main fish" [] {
   do -i { ^sudo chsh -s /usr/bin/fish $env.USER }
 }
 
+def "main opencode" [] {
+  if (has-cmd opencode) {
+    log info "opencode is already installed"
+    return
+  }
+
+  log info "Installing opencode"
+  ^curl -fsSL https://opencode.ai/install | bash
+}
+
 def "main desktop" [] {
   main virt
   main flatpaks
@@ -339,6 +350,7 @@ def "main help" [] {
   print "  niri config      Apply niri config only"
   print "  flatpaks         Install flatpak applications"
   print "  fish             Install and configure fish shell"
+  print "  opencode         Install opencode AI coding agent"
   print "  stow <package>   Symlink a config package into ~/.config"
   print ""
 }
