@@ -65,7 +65,7 @@ pixi_packages_install() {
 }
 
 main() {
-  export PATH="$HOME/.pixi/bin:$PATH"
+  export PATH="/home/linuxbrew/.linuxbrew/bin:$HOME/.pixi/bin:$PATH"
   has_cmd dnf && system_install
   pixi_install
   pixi_packages_install

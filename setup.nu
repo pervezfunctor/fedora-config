@@ -105,6 +105,7 @@ export def touch-files [dir: string, files: list<string>] {
 
 def --env bootstrap [] {
   path add $env.DOT_DIR
+  path add "/home/linuxbrew/.linuxbrew/bin"
 
   for p in [
     "bin"
@@ -114,6 +115,15 @@ def --env bootstrap [] {
   ] {
     path add ($env.HOME | path join $p)
   }
+}
+
+export def "main brew" [] {
+  if (has-cmd brew) { return }
+  log+ "Installing brew"
+  http get "https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh" | bash
+
+  ^brew tap ublue-os/tap
+  ^brew install topgrade
 }
 
 def "main vscode install" [] {
@@ -351,6 +361,7 @@ def "main help" [] {
   print "  flatpaks         Install flatpak applications"
   print "  fish             Install and configure fish shell"
   print "  opencode         Install opencode AI coding agent"
+  print "  brew             Install and configure homebrew for linux"
   print "  stow <package>   Symlink a config package into ~/.config"
   print ""
 }
