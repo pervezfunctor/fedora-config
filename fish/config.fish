@@ -13,12 +13,13 @@ set -gx XDG_DATA_DIRS $HOME/.local/share/flatpak/exports/share $XDG_DATA_DIRS
 
 fish_add_path --global --move \
     $HOME/.local/share/flatpak/exports/bin \
-    $DOT_DIR \
+    $DOT_DIR/scripts \
     /home/linuxbrew/.linuxbrew/bin \
     $HOME/.pixi/bin \
     $HOME/bin \
     $HOME/.opencode/bin \
-    $HOME/.local/bin
+    $HOME/.local/bin \
+    $HOME/.local/kitty.app/bin
 
 function has_cmd
     type -q $argv[1]
@@ -105,4 +106,8 @@ else if has_cmd vim
     set -gx EDITOR vim
 else
     set -gx EDITOR $VISUAL
+end
+
+if test -f ~/.fedora-niri-config/fish/local.fish
+    source ~/.fedora-niri-config/fish/local.fish
 end

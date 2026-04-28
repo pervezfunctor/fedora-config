@@ -11,7 +11,7 @@ sudo dnf update -y
 Run the bootstrap script:
 
 ```sh
-sh -c "$(curl -fsSL https://raw.githubusercontent.com/pervezfunctor/fedora-niri-config/main/setup)"
+sh -c "$(curl -fsSL https://raw.githubusercontent.com/pervezfunctor/fedora-niri-config/main/scripts/setup)"
 ```
 
 The bootstrap script clones the repo to `~/.fedora-niri-config`, installs pixi and configures fish as default shell.
@@ -43,6 +43,6 @@ setup.nu brew
 And install packages using brew.
 
 ```bash
+brew install font-jetbrains-mono-nerd-font
 brew install --cask antigravity-linux
-brew install opencode
 ```
