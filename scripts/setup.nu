@@ -205,10 +205,11 @@ def "main fish" [] {
 }
 
 def "main kitty" [] {
-  if not (has-cmd $"($env.HOME)/.local/kitty.app/bin/kitty") {
-    curl -L https://sw.kovidgoyal.net/kitty/installer.sh | sh /dev/stdin
-  }
+  # if not (has-cmd $"($env.HOME)/.local/kitty.app/bin/kitty") {
+  #   curl -L https://sw.kovidgoyal.net/kitty/installer.sh | sh /dev/stdin
+  # }
 
+  si ["kitty"]
   main stow "kitty"
 }
 

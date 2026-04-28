@@ -5,7 +5,8 @@ binds {
 
     Mod+Shift+Slash { show-hotkey-overlay; }
 
-    Mod+Return  { spawn "~/.local/kitty.app/bin/kitty"; }
+    // Mod+Return  { spawn "~/.local/kitty.app/bin/kitty"; }
+    Mod+Return  { spawn "kitty"; }
 
     Ctrl+Alt+Delete { quit; }
     Mod+Shift+Q     { quit; }
