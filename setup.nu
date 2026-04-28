@@ -183,8 +183,18 @@ def "main docker" [] {
   sudo usermod -aG docker $env.USER
 }
 
+def "main kitty" [] {
+  if not (has-cmd "$env.HOME/.local/kitty.app/bin/kitty") {
+    curl -L https://sw.kovidgoyal.net/kitty/installer.sh | sh /dev/stdin
+  }
+
+  main stow "kitty"
+}
+
 def wm-install [] {
   main fonts
+  main kitty
+
   log info "Installing window manager packages"
   si [
     "adw-gtk3-theme"
@@ -195,7 +205,6 @@ def wm-install [] {
     "gvfs-fuse"
     "gvfs-smb"
     "imv"
-    "kitty"
     "libsecret"
     "mate-polkit"
     "mpv"
@@ -224,7 +233,6 @@ def wm-install [] {
   do -i { mkdir $"($pictures)/Screenshots" }
   do -i { mkdir $"($pictures)/Wallpapers" }
 
-  main stow "kitty"
   main stow "xdg-desktop-portal"
 }
 
@@ -375,6 +383,7 @@ def "main help" [] {
   print "  docker           Install and configure docker"
   print "  brew             Install and configure homebrew for linux"
   print "  fish             Install and configure fish shell"
+  print "  kitty            Install and configure kitty terminal"
   print "  opencode         Install opencode AI coding agent"
   print ""
   print "  stow <package>   Symlink a config package into ~/.config"

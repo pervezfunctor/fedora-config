@@ -3,7 +3,7 @@ binds {
     Super+Alt+L { spawn-sh "dms ipc call lock lock"; }
 
     Mod+Shift+Slash { show-hotkey-overlay; }
-    Mod+Return { spawn "kitty"; }
+    Mod+Return { spawn "~/.local/kitty.app/bin/kitty"; }
 
     Ctrl+Alt+Delete { quit; }
     Mod+Shift+Q { quit; }
