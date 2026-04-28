@@ -14,6 +14,11 @@ log() {
   printf "INFO: %s\n" "$*" >>"${HOME}/.fedora-niri-config.log"
 }
 
+warn() {
+  printf "WARNING: %s\n" "$*"
+  printf "WARNING: %s\n" "$*" >>"${HOME}/.fedora-niri-config.log"
+}
+
 die() {
   printf "ERROR: %s\n" "$*" >&2
   printf "ERROR: %s\n" "$*" >>"${HOME}/.fedora-niri-config.log"
@@ -24,25 +29,29 @@ dotfiles_install() {
   has_cmd git || die "git not found. Quitting."
 
   if [ ! -d "$DOT_DIR" ]; then
-    echo "Cloning dotfiles to $DOT_DIR."
+    log "Cloning dotfiles to $DOT_DIR."
     git clone "$REPO_URL" "$DOT_DIR" || die "Failed to clone $REPO_URL"
     return
   elif [ -z "$(git -C "$DOT_DIR" status --porcelain)" ]; then
-    echo "Dotfiles repo clean. Pulling latest changes"
+    log "Dotfiles repo clean. Pulling latest changes"
     git -C "$DOT_DIR" pull --rebase || {
-      echo "Rebase failed. Aborting."
+      warn "Rebase failed. Aborting."
       git -C "$DOT_DIR" rebase --abort || die "Failed to abort rebase"
     }
   else
-    echo "Dotfiles repo dirty. Skipping update."
+    warn "Dotfiles repo dirty. Skipping update."
     return
   fi
 }
 
 system_install() {
   sudo dnf update -y || die "Failed to update packages"
-  sudo dnf install -y git gcc pipx libatomic make plocate tar tmux unzip zstd ||
-    die "Failed to install dependencies"
+
+  sudo dnf install -y git gcc pipx libatomic make plocate tar tmux unzip \
+    zstd bat direnv duf eza fd fzf gdu gh jq ripgrep tealdeer trash-cli \
+    zoxide difftastic less htop gum
+
+  tldr --update || die "Failed to install dependencies"
 
   sudo updatedb
 }
@@ -51,17 +60,30 @@ pixi_install() {
   has_cmd pixi && return 0
 
   has_cmd curl || die "curl is not installed. Quitting."
-  echo "pixi is not installed. Installing pixi."
+  log "Installing pixi."
   curl -fsSL https://pixi.sh/install.sh | sh
   has_cmd pixi || die "Failed to install pixi"
 }
 
 pixi_packages_install() {
-  pixi global install bat bottom carapace direnv duf eza fd fzf gdu gh \
-    jq nushell xh ripgrep tealdeer television trash-cli zoxide starship \
-    difftastic
+  pixi global install carapace nushell xh television starship bottom nvim lazyygit
+}
 
-  tldr --update
+fresh_install() {
+  has_cmd dnf && system_install
+  pixi_install
+  pixi_packages_install
+  dotfiles_install
+
+  has_cmd nu || die "nu is not installed. Quitting."
+  nu "${DOT_DIR}/scripts/setup.nu" fish 2>&1 | tee -a "${HOME}/.fedora-niri-config.log"
+}
+
+has_commands() {
+  for cmd in "$@"; do
+    has_cmd "$cmd" || return 1
+  done
+  return 0
 }
 
 main() {
@@ -69,13 +91,12 @@ main() {
   touch "${HOME}/.fedora-niri-config.log"
 
   export PATH="/home/linuxbrew/.linuxbrew/bin:$HOME/.pixi/bin:$PATH"
-  has_cmd dnf && system_install
-  pixi_install
-  pixi_packages_install
-  dotfiles_install
 
-  has_cmd nu || die "nu is not installed. Quitting."
-  nu "${DOT_DIR}/setup.nu" fish 2>&1 | tee -a "${HOME}/.fedora-niri-config.log"
+  if has_commands pixi fish nu trash gh starship gum; then
+    "${DOT_DIR}/scripts/setup.nu" 2>&1 menu | tee -a "${HOME}/.fedora-niri-config.log"
+  else
+    fresh_install
+  fi
 }
 
 main "$@"

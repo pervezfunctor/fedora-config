@@ -51,11 +51,7 @@ export def sln [src: string, dst: string] {
   }
 
   if (file-or-link-exists $dst) {
-    if (has-cmd trash) {
-      ^trash $dst
-    } else {
-      rm -f $dst
-    }
+    ^trash $dst
   }
 
   log info $"linking ($src) -> ($dst)"
@@ -117,7 +113,7 @@ def --env bootstrap [] {
   }
 }
 
-export def "main brew" [] {
+def "main brew" [] {
   if (has-cmd brew) { return }
   log+ "Installing brew"
   http get "https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh" | bash
@@ -356,6 +352,107 @@ def "main desktop" [] {
   main niri
 }
 
+def "main zed" [] {
+  if (has-cmd zed) {
+    log info "zed is already installed"
+    return
+  }
+
+  log info "Installing zed"
+  curl -f https://zed.dev/install.sh | sh
+
+  main stow "zed"
+}
+
+let COMMANDS = {
+  desktop: {
+    desc: "Run desktop setup (virt, flatpaks, niri, brew)"
+    run: {|| main desktop }
+  }
+  niri: {
+    desc: "Install and configure niri WM"
+    run: {|| main niri }
+  }
+  brew: {
+    desc: "Install Homebrew"
+    run: {|| main brew }
+  }
+  flatpaks: {
+    desc: "Install flatpak applications"
+    run: {|| main flatpaks }
+  }
+  vscode: {
+    desc: "Install vscode and extensions"
+    run: {|| main vscode }
+  }
+  virt: {
+    desc: "Install and configure virt-manager/libvirt"
+    run: {|| main virt }
+  }
+  fish: {
+    desc: "Install and configure fish shell"
+    run: {|| main fish }
+  }
+  opencode: {
+    desc: "Install opencode"
+    run: {|| main opencode }
+  }
+  docker: {
+    desc: "Install and configure Docker"
+    run: {|| main docker }
+  }
+  kitty: {
+    desc: "Install and configure kitty terminal"
+    run: {|| main kitty }
+  }
+  zed: {
+    desc: "Install and configure Zed editor"
+    run: {|| main zed }
+  }
+}
+
+def commands [] {
+  $COMMANDS | transpose name value
+}
+
+def options [] {
+  commands | get name
+}
+
+def run-command [cmd: string] {
+  let key = ($cmd | str trim)
+  let action = (
+    commands
+    | where name == $key
+    | get value
+    | first
+  )
+
+  if ($action | is-empty) {
+    log warning $"Unknown command: ($key)"
+    return
+  }
+
+  do $action.run
+}
+
+const DEFAULT_INSTALL = ["uv", "vscode"]
+
+def gum-select-install [] {
+  if not (has-cmd gum) {
+    die "gum is required for interactive selection"
+  }
+
+  let defaults = ($DEFAULT_INSTALL | str join ",")
+
+  options
+  | str join "\n"
+  | ^gum choose --no-limit --selected $defaults
+  | lines
+  | each {|cmd| run-command ($cmd | str trim) }
+  | ignore
+}
+
 def "main help" [] {
   print "Usage:"
   print "  setup.nu"
@@ -364,27 +461,9 @@ def "main help" [] {
   print ""
   print "Commands:"
   print "  help             Show this help message"
-  print "  desktop          Run desktop setup (virt, flatpaks, niri)"
-  print ""
-  print "  niri             Install and configure niri WM"
-  print "  niri install     Install niri, dms, and related packages"
-  print "  niri config      Apply niri config only"
-  print ""
-  print "  flatpaks         Install flatpak applications"
-  print ""
-  print "  vscode           Install vscode and extensions"
-  print "  vscode install   Install vscode only"
-  print "  vscode config    Install vscode extensions/settings only"
-  print ""
-  print "  virt             Install and configure virt-manager/libvirt"
-  print "  virt install     Install virt packages only"
-  print "  virt config      Configure libvirt only"
-  print ""
-  print "  docker           Install and configure docker"
-  print "  brew             Install and configure homebrew for linux"
-  print "  fish             Install and configure fish shell"
-  print "  kitty            Install and configure kitty terminal"
-  print "  opencode         Install opencode AI coding agent"
+
+  commands | each {|row| print $"  ($row.name | fill -w 16) ($row.value.desc)" }
+
   print ""
   print "  stow <package>   Symlink a config package into ~/.config"
   print ""
@@ -405,9 +484,13 @@ def checks [] {
   }
 }
 
-def main [] {
+def "main default" [] {
   checks
   bootstrap
   main update
-  main desktop
+}
+
+def main [] {
+  main default
+  gum-select-install
 }
