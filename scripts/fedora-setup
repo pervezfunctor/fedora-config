@@ -69,14 +69,30 @@ pixi_packages_install() {
   pixi global install carapace nushell xh television starship bottom
 }
 
+launch_fish_in_bash_install() {
+  grep -q 'exec fish' ~/.bashrc 2>/dev/null || cat <<'EOF' >>~/.bashrc
+
+# Auto-start fish for interactive shells
+if [[ $- == *i* ]] && [[ -z "$FISH_LAUNCHED" ]]; then
+  export PATH="/opt/homebrew/bin:$PATH"
+  if command -v fish >/dev/null 2>&1; then
+    export FISH_LAUNCHED=1
+    exec fish || echo "Failed to start fish, staying in bash"
+  fi
+fi
+
+EOF
+}
+
 fresh_install() {
   has_cmd dnf && system_install
+
   pixi_install
   pixi_packages_install
-  dotfiles_install
-
   has_cmd nu || die "nu is not installed. Quitting."
-  nu "${DOT_DIR}/scripts/setup.nu" fish 2>&1 | tee -a "${HOME}/.fedora-config.log"
+
+  dotfiles_install
+  launch_fish_in_bash_install
 }
 
 has_commands() {
@@ -93,7 +109,7 @@ main() {
   export PATH="/home/linuxbrew/.linuxbrew/bin:$HOME/.pixi/bin:$PATH"
 
   if has_commands git pixi fish nu trash gh starship gum; then
-    "${DOT_DIR}/scripts/setup.nu" 2>&1 | tee -a "${HOME}/.fedora-config.log"
+    log "All commands found, skipping fresh install. Use '${DOT_DIR}/scripts/setup.nu' to configure your system"
   else
     fresh_install
   fi
