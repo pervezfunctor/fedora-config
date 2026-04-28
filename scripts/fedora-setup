@@ -6,22 +6,22 @@ has_cmd() {
   command -v "$1" >/dev/null 2>&1
 }
 
-readonly REPO_URL="https://github.com/pervezfunctor/fedora-niri-config.git"
-readonly DOT_DIR="$HOME/.fedora-niri-config"
+readonly REPO_URL="https://github.com/pervezfunctor/fedora-config.git"
+readonly DOT_DIR="$HOME/.fedora-config"
 
 log() {
   printf "INFO: %s\n" "$*"
-  printf "INFO: %s\n" "$*" >>"${HOME}/.fedora-niri-config.log"
+  printf "INFO: %s\n" "$*" >>"${HOME}/.fedora-config.log"
 }
 
 warn() {
   printf "WARNING: %s\n" "$*"
-  printf "WARNING: %s\n" "$*" >>"${HOME}/.fedora-niri-config.log"
+  printf "WARNING: %s\n" "$*" >>"${HOME}/.fedora-config.log"
 }
 
 die() {
   printf "ERROR: %s\n" "$*" >&2
-  printf "ERROR: %s\n" "$*" >>"${HOME}/.fedora-niri-config.log"
+  printf "ERROR: %s\n" "$*" >>"${HOME}/.fedora-config.log"
   exit 1
 }
 
@@ -76,7 +76,7 @@ fresh_install() {
   dotfiles_install
 
   has_cmd nu || die "nu is not installed. Quitting."
-  nu "${DOT_DIR}/scripts/setup.nu" fish 2>&1 | tee -a "${HOME}/.fedora-niri-config.log"
+  nu "${DOT_DIR}/scripts/setup.nu" fish 2>&1 | tee -a "${HOME}/.fedora-config.log"
 }
 
 has_commands() {
@@ -87,13 +87,13 @@ has_commands() {
 }
 
 main() {
-  rm -f "${HOME}/.fedora-niri-config.log"
-  touch "${HOME}/.fedora-niri-config.log"
+  rm -f "${HOME}/.fedora-config.log"
+  touch "${HOME}/.fedora-config.log"
 
   export PATH="/home/linuxbrew/.linuxbrew/bin:$HOME/.pixi/bin:$PATH"
 
   if has_commands pixi fish nu trash gh starship gum; then
-    "${DOT_DIR}/scripts/setup.nu" 2>&1 menu | tee -a "${HOME}/.fedora-niri-config.log"
+    "${DOT_DIR}/scripts/setup.nu" 2>&1 | tee -a "${HOME}/.fedora-config.log"
   else
     fresh_install
   fi

@@ -4,7 +4,7 @@ use std/log
 use std/util "path add"
 
 export-env {
-  $env.DOT_DIR = ($env.HOME | path join ".fedora-niri-config")
+  $env.DOT_DIR = ($env.HOME | path join ".fedora-config")
 }
 
 export def die [msg: string] {
@@ -122,6 +122,13 @@ def "main brew" [] {
   ^brew install topgrade
 }
 
+def "main fonts" [] {
+  si ["cascadia-mono-nf-fonts" "cascadia-code-nf-fonts"]
+  if (has-cmd brew) {
+    brew install font-jetbrains-mono-nerd-font
+  }
+}
+
 def "main vscode install" [] {
   main fonts
 
@@ -160,13 +167,6 @@ def "main vscode config" [] {
   }
 
   main stow "Code"
-}
-
-def "main fonts" [] {
-  si ["cascadia-mono-nf-fonts" "cascadia-code-nf-fonts"]
-  if (has-cmd brew) {
-    brew install font-jetbrains-mono-nerd-font
-  }
 }
 
 def "main vscode" [] {
@@ -275,6 +275,9 @@ def "main flatpaks" [] {
 
   let flatpaks = [
     "com.github.tchx84.Flatseal"
+    "app.zen_browser.zen"
+    "md.obsidian.Obsidian"
+    org.gnome.Papers
   ]
 
   for pkg in $flatpaks {
@@ -333,12 +336,6 @@ def "main virt" [] {
   main virt config
 }
 
-def "main fish" [] {
-  si ["fish"]
-  main stow "fish"
-  do -i { ^sudo chsh -s /usr/bin/fish $env.USER }
-}
-
 def "main opencode" [] {
   if (has-cmd opencode) {
     log info "opencode is already installed"
@@ -392,10 +389,6 @@ let COMMANDS = {
   virt: {
     desc: "Install and configure virt-manager/libvirt"
     run: {|| main virt }
-  }
-  fish: {
-    desc: "Install and configure fish shell"
-    run: {|| main fish }
   }
   opencode: {
     desc: "Install opencode"

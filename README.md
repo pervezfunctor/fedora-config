@@ -11,10 +11,10 @@ sudo dnf update -y
 Run the bootstrap script:
 
 ```sh
-sh -c "$(curl -fsSL https://raw.githubusercontent.com/pervezfunctor/fedora-niri-config/main/scripts/setup)"
+sh -c "$(curl -fsSL https://raw.githubusercontent.com/pervezfunctor/fedora-config/main/scripts/fedora-setup)"
 ```
 
-The bootstrap script clones the repo to `~/.fedora-niri-config`, installs pixi and configures fish as default shell.
+The bootstrap script clones the repo to `~/.fedora-config`, installs pixi and configures fish as default shell.
 
 ## Setup commands
 
