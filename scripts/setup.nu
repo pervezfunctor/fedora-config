@@ -191,6 +191,19 @@ def "main docker" [] {
   sudo usermod -aG docker $env.USER
 }
 
+def "main fish config" [] {
+  log info "Setting up fish config"
+  main stow "fish"
+
+  log info "Changing default shell to fish"
+  do -i { ^chsh -s (which fish) }
+}
+
+def "main fish" [] {
+  si ["fish"]
+  main fish config
+}
+
 def "main kitty" [] {
   if not (has-cmd $"($env.HOME)/.local/kitty.app/bin/kitty") {
     curl -L https://sw.kovidgoyal.net/kitty/installer.sh | sh /dev/stdin
@@ -375,21 +388,9 @@ def "main zed" [] {
 }
 
 let COMMANDS = {
-  desktop: {
-    desc: "Run desktop setup (virt, flatpaks, niri, brew)"
-    run: {|| main desktop }
-  }
   niri: {
     desc: "Install and configure niri WM"
     run: {|| main niri }
-  }
-  brew: {
-    desc: "Install Homebrew"
-    run: {|| main brew }
-  }
-  flatpaks: {
-    desc: "Install flatpak applications"
-    run: {|| main flatpaks }
   }
   vscode: {
     desc: "Install vscode and extensions"
@@ -399,17 +400,21 @@ let COMMANDS = {
     desc: "Install and configure virt-manager/libvirt"
     run: {|| main virt }
   }
+  docker: {
+    desc: "Install and configure Docker(from fedora repo)"
+    run: {|| main docker }
+  }
+  flatpaks: {
+    desc: "Install flatpak applications"
+    run: {|| main flatpaks }
+  }
+  brew: {
+    desc: "Install Homebrew"
+    run: {|| main brew }
+  }
   opencode: {
     desc: "Install opencode"
     run: {|| main opencode }
-  }
-  docker: {
-    desc: "Install and configure Docker"
-    run: {|| main docker }
-  }
-  kitty: {
-    desc: "Install and configure kitty terminal"
-    run: {|| main kitty }
   }
   zed: {
     desc: "Install and configure Zed editor"
@@ -446,7 +451,7 @@ def run-command [cmd: string] {
   do $action.run
 }
 
-const DEFAULT_INSTALL = ["uv", "vscode"]
+const DEFAULT_INSTALL = []
 
 def gum-select-install [] {
   if not (has-cmd gum) {
@@ -484,11 +489,27 @@ def "main update" [] {
   ^sudo dnf update -y
 }
 
+
+def check-commands [...cmds: string]: nothing -> bool {
+  mut result = true
+  for cmd in $cmds {
+    if not (has-cmd $cmd) {
+      warn+ $"($cmd) not available"
+      result := false
+    }
+  }
+  $result
+}
+
 def checks [] {
   if (has-cmd rpm-ostree) {
     die "fedora atomic not supported. Quitting."
   }
-  if not (has-cmd trash) { si ["trash-cli"] }
+
+  if not (check-commands "gum" "trash" "git" "pixi") {
+    die "Required commands not available. Quitting."
+  }
+
   if not (is-fedora) {
     die "Only Fedora supported. Quitting."
   }
