@@ -78,7 +78,6 @@ launch_fish_in_bash_install() {
 
 # Auto-start fish for interactive shells
 if [[ $- == *i* ]] && [[ -z "$FISH_LAUNCHED" ]]; then
-  export PATH="/opt/homebrew/bin:$PATH"
   if command -v fish >/dev/null 2>&1; then
     export FISH_LAUNCHED=1
     exec fish || echo "Failed to start fish, staying in bash"
@@ -90,6 +89,7 @@ EOF
 
 fish_config() {
   has_cmd fish || die "fish not installed. Quitting."
+
   if [ -L ~/.config/fish/config.fish ] &&
     [ "$(readlink ~/.config/fish/config.fish)" = "${DOT_DIR}/fish/config.fish" ]; then
     return 0
