@@ -116,3 +116,7 @@ end
 if test -f ~/.vite-plus/env.fish
     source ~/.vite-plus/env.fish
 end
+
+if has_cmd fastfetch
+    fastfetch
+end
