@@ -47,13 +47,13 @@ dotfiles_install() {
 system_install() {
   sudo dnf update -y || die "Failed to update packages"
 
-  sudo dnf install -y git gcc pipx libatomic make plocate tar tmux unzip \
+  sudo dnf install -y git fish gcc pipx libatomic make plocate tar tmux \
     zstd bat direnv duf eza fd fzf gdu gh jq ripgrep tealdeer trash-cli \
-    zoxide difftastic less htop gum tmux cmake
+    zoxide difftastic less htop gum tmux cmake unzip shellcheck shfmt rsync
 
-  tldr --update || die "Failed to install dependencies"
+  tldr --update || true
 
-  sudo updatedb
+  sudo updatedb || true
 }
 
 pixi_install() {
