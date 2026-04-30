@@ -2,21 +2,31 @@
 
 ## Bootstrap
 
-First install all updates.
+First install all updates and reboot your computer.
 
 ```bash
-sudo dnf update -y
+sudo dnf upgrade --offline
 ```
 
-Reboot your pc and run the bootstrap script:
+Run the following bootstrap script
 
 ```sh
 sh -c "$(curl -fsSL https://raw.githubusercontent.com/pervezfunctor/fedora-config/main/scripts/fedora-setup)"
 ```
 
-The bootstrap script clones the repo to `~/.fedora-config`, installs pixi and configures fish to start in your ~/.bashrc.
+This script clones this repo to `~/.fedora-config`, installs pixi and installs fish as your default shell.
 
-Restart you terminal. You should be in fish shell.
+Reboot your computer and open terminal. You should be in fish shell.
+
+```sh
+echo $shell
+```
+
+If fish shell is not the default, use the following command.
+
+```sh
+chsh -s $(which fish) $user
+```
 
 ## Setup commands
 
@@ -26,15 +36,9 @@ Use the following interactive script install additional software(docker, vscode,
 ~/.fedora-config/scripts/setup.nu
 ```
 
-If fish shell is not the default, use the following command.
-
-```sh
-chsh -s $(which fish) $user
-```
-
 Install desktop applications with [flatpak](https://flathub.org/en)).
 
-```bash
+```sh
 setup.nu flatpak
 flatpak install --user flathub com.google.Chrome
 ```
@@ -47,17 +51,29 @@ pixi global install lazydocker
 
 If even pixi does not have the package you need, use brew.
 
-```bash
+```sh
 setup.nu brew
 brew install font-jetbrains-mono-nerd-font
 brew install --cask antigravity-linux
+```
+
+If you prefer nix
+
+```sh
+setup.nu nix
+```
+
+and then setup home-manager
+
+```sh
+hms
 ```
 
 ## Niri setup
 
 Currently this repository uses latest versions of niri and dms using copr packages(by the creators of niri and dms). Installation might break occasionally. So use this with caution.
 
-```bash
+```sh
 setup.nu niri
 ```
 
