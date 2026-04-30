@@ -26,6 +26,12 @@ Use the following interactive script install additional software(docker, vscode,
 ~/.fedora-config/scripts/setup.nu
 ```
 
+If fish shell is not the default, use the following command.
+
+```sh
+chsh -s $(which fish) $user
+```
+
 Install desktop applications with [flatpak](https://flathub.org/en)).
 
 ```bash

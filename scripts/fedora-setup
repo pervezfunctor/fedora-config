@@ -69,24 +69,6 @@ pixi_packages_install() {
   pixi global install carapace nushell xh television starship bottom
 }
 
-is_fish_in_bash() {
-  grep -q 'exec fish' ~/.bashrc 2>/dev/null
-}
-
-launch_fish_in_bash_install() {
-  is_fish_in_bash || cat <<'EOF' >>~/.bashrc
-
-# Auto-start fish for interactive shells
-if [[ $- == *i* ]] && [[ -z "$FISH_LAUNCHED" ]]; then
-  if command -v fish >/dev/null 2>&1; then
-    export FISH_LAUNCHED=1
-    exec fish || echo "Failed to start fish, staying in bash"
-  fi
-fi
-
-EOF
-}
-
 fish_config() {
   has_cmd fish || die "fish not installed. Quitting."
 
@@ -102,7 +84,9 @@ fish_config() {
   fi
   ln -sf "${DOT_DIR}/fish/config.fish" ~/.config/fish/config.fish
 
-  launch_fish_in_bash_install
+  if ! sudo chsh -s /usr/bin/fish "$USER"; then
+    warn "Use 'sudo chsh -s /usr/bin/fish $USER' to set fish as default shell"
+  fi
 }
 
 fresh_install() {
