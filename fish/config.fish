@@ -31,23 +31,6 @@ if ! status is-interactive
   return
 end
 
-if has_cmd zoxide
-    zoxide init fish | source
-end
-
-if has_cmd fzf
-    fzf --fish | source
-end
-
-if has_cmd starship
-    starship init fish | source
-end
-
-if has_cmd carapace
-    set -gx CARAPACE_BRIDGES 'zsh,fish,bash,inshellisense' # optional
-    carapace _carapace | source
-end
-
 function fish_greeting
 end
 
@@ -120,12 +103,32 @@ if test -f ~/.vite-plus/env.fish
     source ~/.vite-plus/env.fish
 end
 
-if has_cmd fastfetch
-    fastfetch
-end
-
 alias gh-refresh 'gh auth refresh -h github.com'
 
 if has_cmd nix
   alias hms 'nix run home-manager -- switch --flake ~/.fedora-config/home-manager#$USER --impure'
+  alias ngc 'nix-garbage-collect -d'
+  alias nr 'nix run nixpkgs#'
+  alias nds 'devenv shell'
+end
+
+if test -n "$FISH_SIMPLE"
+    return
+end
+
+if has_cmd zoxide
+    zoxide init fish | source
+end
+
+if has_cmd fzf
+    fzf --fish | source
+end
+
+if has_cmd starship
+    starship init fish | source
+end
+
+if has_cmd carapace
+    set -gx CARAPACE_BRIDGES 'zsh,fish,bash,inshellisense' # optional
+    carapace _carapace | source
 end

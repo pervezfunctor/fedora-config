@@ -304,6 +304,8 @@ def "main kitty latest" [] {
 
 def "main kitty" [] {
   si ["kitty"]
+
+  touch-files ~/.config/kitty ["local.conf", "dank-theme.conf", "dank-tabs.conf"]
   main stow "kitty"
 }
 
