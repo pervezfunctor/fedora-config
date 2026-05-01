@@ -47,6 +47,8 @@ alias gfm 'git pull'
 alias gcm 'git commit -m'
 alias gia 'git add'
 alias gco 'git checkout'
+alias gpr 'git stash -u && git pull --rebase && git stash apply'
+
 function git-tree
     git status --short | awk '{print $2}' | tree --fromfile
 end
