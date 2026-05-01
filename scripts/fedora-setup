@@ -56,9 +56,9 @@ system_install() {
   sudo updatedb || true
 
   if gh auth setup-git; then
-    log "Make sure to setup github authentication with: `gh auth login`"
+    log "Make sure to setup github authentication with: 'gh auth login'"
   else
-    log "Failed to setup github credentials: Use `gh auth login` followed by `gh auth setup-git` to fix this"
+    log "Failed to setup github credentials: Use 'gh auth login' followed by 'gh auth setup-git' to fix this"
   fi
 }
 
