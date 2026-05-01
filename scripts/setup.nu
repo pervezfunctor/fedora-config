@@ -165,7 +165,14 @@ def "main dev" [] {
 }
 
 def "main fonts" [] {
-  si ["cascadia-mono-nf-fonts" "cascadia-code-nf-fonts" "adwaita-sans-fonts" "rsms-inter-vf-fonts"]
+  si [
+    "cascadia-mono-nf-fonts"
+    "cascadia-code-nf-fonts"
+    "adwaita-sans-fonts"
+    "rsms-inter-vf-fonts"
+    "material-symbols-fonts"
+  ]
+
   if (has-cmd brew) {
     brew install font-jetbrains-mono-nerd-font
   }
