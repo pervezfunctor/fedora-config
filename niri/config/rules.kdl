@@ -77,15 +77,10 @@ window-rule {
 
 window-rule {
     match app-id="^(kitty.*)$"
-    default-column-width { proportion 0.333; }
-    background-effect {
-        blur true
-    }
-}
-
-window-rule {
     match app-id="^Ghostty$"
-
+    match app-id="^Alacritty$"
+    match app-id="foot"
+    default-column-width { proportion 0.333; }
     background-effect {
         blur true
     }
