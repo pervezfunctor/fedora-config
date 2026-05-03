@@ -592,7 +592,7 @@ def "main zed" [] {
   main stow "zed"
 }
 
-let BASE_COMMANDS = {
+let ALL_COMMANDS = {
   niri: {
     desc: "Install and configure niri WM"
     run: {|| main niri }
@@ -649,9 +649,6 @@ let BASE_COMMANDS = {
     desc: "Install and configure OpenCode"
     run: {|| main opencode }
   }
-}
-
-let ATOMIC_COMMANDS = {
   "vscode atomic": {
     desc: "Install vscode via brew (atomic)"
     run: {|| main vscode atomic }
@@ -663,9 +660,9 @@ let ATOMIC_COMMANDS = {
 }
 
 let COMMANDS = if (has-cmd rpm-ostree) {
-  $BASE_COMMANDS | select "flatpak" "apps" "zed" "nvim" "rust" "uv" "vp" "opencode" | merge $ATOMIC_COMMANDS
+  $ALL_COMMANDS | select "flatpak" "apps" "zed" "nvim" "rust" "uv" "vp" "opencode"
 } else {
-  $BASE_COMMANDS
+  $ALL_COMMANDS | reject "vscode atomic" "kitty atomic"
 }
 
 def run-command [cmd: string] {
