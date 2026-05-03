@@ -129,7 +129,9 @@ pixi_install() {
 
 pixi_packages_install() {
   pixi global install carapace nushell xh television starship bottom
-  has_cmd rpm-ostree && pixi global install "${COMMON_PACKAGES[@]}"
+  if has_cmd rpm-ostree; then
+    pixi global install "${COMMON_PACKAGES[@]}"
+  fi
 }
 
 link() {
