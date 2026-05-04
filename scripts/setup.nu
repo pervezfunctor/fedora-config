@@ -713,7 +713,7 @@ let ALL_COMMANDS = {
 }
 
 let ATOMIC_COMMANDS = ($ALL_COMMANDS |
-  select  "kitty" "shell" "fish" "flatpak" "apps" "zed" "rust" "uv" "vp" "opencode")
+  select  "kitty" "shell" "flatpak" "apps" "zed" "rust" "uv" "vp" "opencode")
 
 let COMMANDS = if (is-atomic) {
   $ATOMIC_COMMANDS
