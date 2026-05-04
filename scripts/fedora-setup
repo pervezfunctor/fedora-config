@@ -25,6 +25,8 @@ has_cmd() {
 main() {
   has_cmd dnf || die "Only Fedora is supported. Quitting."
 
+  log "Fedora Config Setup..."
+
   if [ ! -d "$DOT_DIR" ]; then
     git clone https://github.com/pervezfunctor/fedora-config "$DOT_DIR" || die "git clone failed"
   fi
@@ -35,10 +37,12 @@ main() {
 
   has_cmd nix || die "nix is not installed. Quitting."
 
-  nix run nixpkgs#nu -- "$DOT_DIR"/scripts/setup.nu shell || die "shell/fish setup failed"
+  nix run nixpkgs#nushell -- "$DOT_DIR"/scripts/setup.nu shell || die "shell/fish setup failed"
 
   echo ""
   log "Shell configuration complete."
   log "Use nix run nixpkgs#nu -- ~/.fedora-config/scripts/setup.nu for further setup."
   echo ""
 }
+
+main "$@"

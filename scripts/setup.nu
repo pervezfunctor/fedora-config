@@ -174,15 +174,15 @@ def set-fish-as-default-shell [] {
     log info $"($fish_path) is already in /etc/shells."
   } else {
     log warning $"Adding ($fish_path) to /etc/shells."
-    let tee = ($fish_path | ^sudo tee -a $etc_shells | complete)
-    if $tee.exit_code != 0 {
+    echo $fish_path | ^sudo tee -a $etc_shells
+    if $env.LAST_EXIT_CODE != 0 {
       log error $"Failed to add ($fish_path) to /etc/shells."
       return
     }
   }
 
-  let chsh = (^chsh -s $fish_path | complete)
-  if $chsh.exit_code == 0 {
+  ^chsh -s $fish_path
+  if $env.LAST_EXIT_CODE == 0 {
     log info $"Default shell set to fish \(($fish_path)\). Re-login to apply."
   } else {
     log error $"Failed to set fish as default shell. Try running 'chsh -s ($fish_path)' manually."
