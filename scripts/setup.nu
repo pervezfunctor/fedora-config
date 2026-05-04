@@ -111,7 +111,7 @@ def "main stow config" [package: string] {
 }
 
 def "main stow" [package: string] {
-  main stow $package
+  main stow config $package
 }
 
 def "main stow home" [package: string] {
