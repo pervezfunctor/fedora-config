@@ -259,8 +259,6 @@ def "main brew" [] {
 def "main rust" [] {
   if (has-cmd rustup) { return }
   ^curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
-  ^rustup default stable
-  ^rustup update
 }
 
 def "main uv" [] {
