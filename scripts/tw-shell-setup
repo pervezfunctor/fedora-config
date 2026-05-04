@@ -40,6 +40,7 @@ main() {
 
   log "Removing busybox..."
   sudo zypper remove -y busybox* || true
+  sudo zypper remove -y busybox-less || true
   log "Installing less..."
   sudo zypper install -y less
   log "Installing packages..."
@@ -56,7 +57,7 @@ main() {
   log "Linking new fish config..."
   ln -sf "$DOT_DIR"/config.fish ~/.config/fish/config.fish
   log "Setting fish as default shell..."
-  if ! chsh -s /usr/bin/fish; then
+  if ! sudo chsh -s $(which fish) "$USER"; then
     log "Failed to set fish as default shell. You may need to run 'sudo chsh -s $(which fish) $USER' manually."
   else
     log "Fish set as default shell successfully."
