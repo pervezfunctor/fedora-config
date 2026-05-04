@@ -50,7 +50,9 @@ main() {
   log "Setting up fish shell..."
   mkdir -p ~/.config/fish
   log "Trashing old fish config, restore with 'trash-restore'..."
-  trash ~/.config/fish/config.fish || true
+  if ! trash ~/.config/fish/config.fish; then
+    log "$HOME/.config/fish/config.fish does not exist. Skipping trash."
+  fi
   log "Linking new fish config..."
   ln -sf "$DOT_DIR"/config.fish ~/.config/fish/config.fish
   log "Setting fish as default shell..."
