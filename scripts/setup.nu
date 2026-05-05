@@ -238,7 +238,6 @@ def "main shell" [] {
 
 def --env bootstrap [] {
   path add $env.DOT_DIR
-  path add "/home/linuxbrew/.linuxbrew/bin"
 
   for p in [
     "bin"
@@ -248,16 +247,6 @@ def --env bootstrap [] {
   }
 }
 
-def "main brew" [] {
-  if (has-cmd brew) { return }
-  ^sudo -v
-  log info "Installing brew"
-  http get "https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh" | bash
-  path add "/home/linuxbrew/.linuxbrew/bin"
-
-  ^brew tap ublue-os/tap
-  ^brew install topgrade
-}
 
 def "main rust" [] {
   if (has-cmd rustup) { return }
@@ -282,10 +271,6 @@ def "main dev" [] {
 }
 
 def "main fonts" [] {
-  if (has-cmd brew) {
-    brew install --cask font-jetbrains-mono-nerd-font font-monaspace-nerd-font
-  }
-
   if (is-atomic) { return }
   si [
     "cascadia-mono-nf-fonts"
@@ -429,7 +414,6 @@ def "main wm" [] {
     "wl-clipboard"
     "xdg-desktop-portal-gnome"
     "xdg-desktop-portal-gtk"
-    "xdg-desktop-portal-wlr"
   ]
 
   log info "Installing pywal packages"
@@ -627,13 +611,6 @@ def "main incus" [] {
   log info "Incus configured. Reboot your system and use incus.nu script."
 }
 
-def "main desktop" [] {
-  main virt
-  main flatpak
-  main brew
-  main niri
-}
-
 def "main zed" [] {
   if (has-cmd zed) {
     log info "zed is already installed"
@@ -685,10 +662,6 @@ let ALL_COMMANDS = {
   apps: {
     desc: "Install and configure flatpak applications(zen browser, obsidian)"
     run: {|| main apps }
-  }
-  brew: {
-    desc: "Install Homebrew"
-    run: {|| main brew }
   }
   zed: {
     desc: "Install and configure Zed editor"
@@ -749,7 +722,6 @@ def "main help" [] {
   print ""
   print "Commands:"
   print "  help             Show this help message"
-  print "  desktop          Configure desktop environment(niri, virt, brew, apps)"
   print "  greetd           Configure greetd greeter(disables SDDM/GDM)"
   print "  stow-config <pkg> Symlink a config package into ~/.config/<pkg>"
   print "  stow-home <pkg>  Symlink a package into ~ (use 'dot-' prefix for dotfiles)"
