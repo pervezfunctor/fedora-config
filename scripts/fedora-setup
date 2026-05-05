@@ -40,7 +40,7 @@ fish_config() {
   log "Trashing existing config.fish...(use trash-restore to restore)"
   trash ~/.config/fish/config.fish || true
 
-  log "Linking new config.fish..."
+  log "Linking ($DOT_DIR/fish/config.fish) -> ($HOME/.config/fish/config.fish)"
   ln -sf "$DOT_DIR/fish/config.fish" ~/.config/fish/config.fish
 
   log "Setting fish as default shell..."
