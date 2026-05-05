@@ -31,9 +31,13 @@ main() {
     git clone https://github.com/pervezfunctor/fedora-config "$DOT_DIR" || die "git clone failed"
   fi
 
+  [ -d "$DOT_DIR" ] || die "$DOT_DIR directory not found. Quitting."
+
   curl --proto '=https' --tlsv1.2 -sSf -L https://install.determinate.systems/nix | sh -s -- install --determinate --no-confirm
   source /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh
   has_cmd nix || die "nix is not installed. Quitting."
+
+  nix run nixpkgs#nushell -- ~/.fedora-config/scripts/setup.nu shell || die "shell setup failed"
 
   echo ""
   log "Shell configuration complete."
