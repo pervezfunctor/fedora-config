@@ -240,6 +240,7 @@ def "main shell" [] {
 
 def --env bootstrap [] {
   path add $env.DOT_DIR
+  path add "/home/linuxbrew/.linuxbrew/bin"
 
   for p in [
     "bin"
@@ -626,9 +627,20 @@ def "main zed" [] {
   main stow "zed"
 }
 
+def "main brew" [] {
+  if (has-cmd brew) { return }
+  ^sudo -v
+  log info "Installing brew"
+  http get "https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh" | bash
+  path add "/home/linuxbrew/.linuxbrew/bin"
+
+  ^brew tap ublue-os/tap
+  ^brew install topgrade
+}
+
 let ALL_COMMANDS = {
   shell: {
-    desc: "Install shell tools and set Fish as default shell"
+    desc: "Install shell tools and set fish as default shell"
     run: {|| main shell }
   }
   niri: {
@@ -642,6 +654,10 @@ let ALL_COMMANDS = {
   virt: {
     desc: "Install and configure virt-manager/libvirt"
     run: {|| main virt }
+  }
+  incus: {
+    desc: "Install and configure Incus(VMs only)"
+    run: {|| main incus }
   }
   docker: {
     desc: "Install and configure Docker(from fedora repo)"
@@ -658,6 +674,10 @@ let ALL_COMMANDS = {
   zed: {
     desc: "Install and configure Zed editor"
     run: {|| main zed }
+  }
+  brew: {
+    desc: "Install Homebrew"
+    run: {|| main brew }
   }
   rust: {
     desc: "Install and configure Rust toolchain"

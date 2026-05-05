@@ -23,7 +23,6 @@ has_cmd() {
 }
 
 pixi_install() {
-  export PATH="$HOME/.pixi/bin:$PATH"
   has_cmd pixi && return 0
   has_cmd curl || die "curl is not installed. Quitting."
 
@@ -66,6 +65,7 @@ system_install() {
   sudo dnf install -y git which less curl fish
 }
 main() {
+  export PATH="/home/linuxbrew/.linuxbrew/bin:$HOME/.pixi/bin:$PATH"
   log "Fedora Config Setup..."
 
   has_cmd dnf && system_install
