@@ -33,8 +33,13 @@ main() {
 
   [ -d "$DOT_DIR" ] || die "$DOT_DIR directory not found. Quitting."
 
-  curl --proto '=https' --tlsv1.2 -sSf -L https://install.determinate.systems/nix | sh -s -- install --determinate --no-confirm
-  source /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh
+  if ! has_cmd nix; then
+    if ! has_cmd /nix/var/nix/profiles/default/bin/nix; then
+      curl --proto '=https' --tlsv1.2 -sSf -L https://install.determinate.systems/nix | sh -s -- install --determinate --no-confirm
+    fi
+    source /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh
+  fi
+
   has_cmd nix || die "nix is not installed. Quitting."
 
   nix run nixpkgs#nushell -- ~/.fedora-config/scripts/setup.nu shell || die "shell setup failed"
