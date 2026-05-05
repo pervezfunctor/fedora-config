@@ -51,10 +51,16 @@ function git-tree
     git status --short | awk '{print $2}' | tree --fromfile
 end
 
-alias fpi 'flatpak install --user flathub'
-alias fpr 'flatpak remove --user'
-alias fps 'flatpak search'
-alias fpu 'flatpak update --user'
+if has_cmd gh
+  alias gh-refresh 'gh auth refresh -h github.com'
+end
+
+if has_cmd flatpak
+  alias fpi 'flatpak install --user flathub'
+  alias fpr 'flatpak remove --user'
+  alias fps 'flatpak search'
+  alias fpu 'flatpak update --user'
+end
 
 alias i 'sudo dnf install -y'
 alias r 'sudo dnf remove'
@@ -99,8 +105,6 @@ if test -f ~/.vite-plus/env.fish
   source ~/.vite-plus/env.fish
 end
 
-alias gh-refresh 'gh auth refresh -h github.com'
-
 if test -n "$FISH_SIMPLE"
     return
 end
@@ -121,7 +125,6 @@ if has_cmd carapace
     set -gx CARAPACE_BRIDGES 'zsh,fish,bash,inshellisense' # optional
     carapace _carapace | source
 end
-
 
 if has_cmd distrobox
   alias dt 'distrobox'
