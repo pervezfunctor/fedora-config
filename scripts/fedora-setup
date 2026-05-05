@@ -24,6 +24,7 @@ has_cmd() {
 
 main() {
   has_cmd dnf || die "Only Fedora is supported. Quitting."
+  sudo dnf install -y git-core curl fish
 
   log "Fedora Config Setup..."
 
@@ -42,7 +43,10 @@ main() {
 
   has_cmd nix || die "nix is not installed. Quitting."
 
-  nix run nixpkgs#nushell -- ~/.fedora-config/scripts/setup.nu shell || die "shell setup failed"
+  trash ~/.config/fish/config.fish
+  ln -sf "$DOT_DIR/config/fish/config.fish" ~/.config/fish/config.fish
+  sudo chsh -s /usr/bin/fish "$USER"
+  has_cmd starship || curl -sS https://starship.rs/install.sh | sh
 
   echo ""
   log "Shell configuration complete."
