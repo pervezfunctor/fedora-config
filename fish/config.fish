@@ -14,9 +14,7 @@ set -gx XDG_DATA_DIRS $HOME/.local/share/flatpak/exports/share $XDG_DATA_DIRS
 fish_add_path --global --move \
     $HOME/.local/share/flatpak/exports/bin \
     $DOT_DIR/scripts \
-    /home/linuxbrew/.linuxbrew/bin \
     $HOME/bin \
-    $HOME/.opencode/bin \
     $HOME/.local/bin \
     $HOME/.cargo/bin \
     $HOME/.local/kitty.app/bin
@@ -117,31 +115,10 @@ if test -n "$FISH_SIMPLE"
     return
 end
 
-if has_cmd zoxide
-    zoxide init fish | source
-end
-
-if has_cmd fzf
-    fzf --fish | source
-end
-
-if has_cmd starship
-    starship init fish | source
-end
-
-if has_cmd carapace
-    set -gx CARAPACE_BRIDGES 'zsh,fish,bash,inshellisense' # optional
-    carapace _carapace | source
-end
-
-if has_cmd fastfetch
-    fastfetch
-end
-
-function dir_exists
-    test -d "$1"
-end
-
 if has_cmd distrobox
     alias dt 'distrobox'
+end
+
+if has_cmd incus
+  alias vm 'incus.nu'
 end

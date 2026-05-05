@@ -22,9 +22,11 @@ Commands:
   post-setup      Steps after installing incus and reboot
   list            List running instances
   list images     List available cloud images
-  search <query>  Search cloud images by keyword
+
   ssh <name>      SSH into a VM instance
   destroy <name>  Stop and delete a VM instance
+  search <query>  Search cloud images by keyword
+
   debian       Create a Debian VM with cloud-init
   ubuntu       Create an Ubuntu VM with cloud-init
   fedora       Create a Fedora VM with cloud-init

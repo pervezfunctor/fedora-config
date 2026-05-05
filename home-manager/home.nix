@@ -11,26 +11,20 @@
     stateVersion = "25.11";
 
     packages = with pkgs; [
+      carapace
       devbox
       devenv
+      nerd-fonts.jetbrains-mono
       nil
       nixd
       nixfmt
-      carapace
-      dysk
-      bottom
       nushell
-      starship
-      television
-      xh
-      bibata-cursors
-      nerd-fonts.monaspace
-      nerd-fonts.jetbrains-mono
-
-      eza
-      direnv
-      fzf
-      zoxide
+      # dysk
+      # bottom
+      # television
+      # xh
+      # bibata-cursors
+      #nerd-fonts.monaspace
     ];
   };
 
@@ -40,7 +34,6 @@
     direnv = {
       enable = true;
       nix-direnv.enable = true;
-      enableFishIntegration = true;
       enableNushellIntegration = true;
     };
 
@@ -54,34 +47,28 @@
 
     eza = {
       enable = true;
-      enableFishIntegration = true;
       enableNushellIntegration = true;
     };
 
     starship = {
       enable = true;
-      enableFishIntegration = true;
       enableZshIntegration = true;
       enableNushellIntegration = true;
     };
 
     carapace = {
       enable = true;
-      enableFishIntegration = true;
       enableNushellIntegration = true;
     };
 
     fzf = {
       enable = true;
-      enableFishIntegration = true;
     };
 
     zoxide = {
       enable = true;
-      enableFishIntegration = true;
       enableNushellIntegration = true;
     };
-
   };
 
   nix = {
