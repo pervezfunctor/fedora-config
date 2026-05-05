@@ -18,7 +18,7 @@ def "main create" [--image: string, container_name?: string] {
       print $"Directory ($dir) already exists. Skipping creation."
     } else {
       mkdir $env.BOXES_DIR
-      distrobox create --init --home $dir --name $name --image $image
+      distrobox create --home $dir --name $name --image $image
     }
 }
 
