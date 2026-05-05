@@ -111,8 +111,26 @@ if has_cmd nix
 end
 
 if test -n "$FISH_SIMPLE"
-  return
+    return
 end
+
+if has_cmd zoxide
+    zoxide init fish | source
+end
+
+if has_cmd fzf
+    fzf --fish | source
+end
+
+if has_cmd starship
+    starship init fish | source
+end
+
+if has_cmd carapace
+    set -gx CARAPACE_BRIDGES 'zsh,fish,bash,inshellisense' # optional
+    carapace _carapace | source
+end
+
 
 if has_cmd distrobox
   alias dt 'distrobox'
