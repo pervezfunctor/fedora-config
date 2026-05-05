@@ -20,7 +20,7 @@ def die [msg: string] {
 }
 
 def ensure-parent-dir [path: string] {
-  let parent = ($path | path dirname)
+  let parent = ($path | path expand | path dirname)
   if not (dir-exists $parent) {
     log info $"creating directory: ($parent)"
     mkdir $parent
@@ -44,6 +44,7 @@ def is-fedora []: nothing -> bool {
 
 def link [source: string, target: string]: nothing -> bool {
   let src = ($source | path expand)
+  let target = ($target | path expand)
 
   if not ($src | path exists) {
     log error $"Skipping: ($src) does not exist"
@@ -97,6 +98,7 @@ def dotify-path [p: string]: nothing -> string {
 
 def link-all [source: string, target: string] {
   let root = ($source | path expand)
+  let target = ($target | path expand)
 
   for f in (glob $"($root)/**/*" --no-dir) {
     let src = ($f | path expand)
@@ -136,6 +138,7 @@ def si [packages: list<string>] {
 }
 
 def touch-files [dir: string, files: list<string>] {
+  let dir = ($dir | path expand)
   do -i { mkdir $dir }
 
   for f in $files {
@@ -233,7 +236,7 @@ def "main shell" [] {
   do -i { tldr --update }
   do -i { sudo updatedb }
 
-  if (has_cmd pixi) {
+  if (has-cmd pixi) {
     pixi global install carapace
   }
 }
@@ -339,7 +342,7 @@ def "main docker" [] {
 }
 
 def "main wallpapers" [] {
-  let base = $"$($env.HOME)/.local/share/backgrounds"
+  let base = '~/.local/share/backgrounds' | path expand
   let dir = $"($base)/ml4w"
   if (dir-exists $dir) {
     log info "ML4W wallpapers already installed, skipping"
@@ -458,6 +461,7 @@ def "main greetd keyring fix" [] {
 
   cp $pam_file $backup
 
+  # @TODO: FIX PERMISSIONS
   $new_lines
   | str join (char nl)
   | save --force $pam_file
@@ -476,8 +480,6 @@ def "main greetd" [] {
   si ["dms-greeter"]
   dms greeter enable
   log info "After logging in with greetd, run `dms greeter sync` to apply changes."
-
-  main greetd keyring fix
 }
 
 def "main niri install" [] {
@@ -628,7 +630,10 @@ def "main zed" [] {
 }
 
 def "main brew" [] {
-  if (has-cmd brew) { return }
+  if (has-cmd brew) {
+    log info "brew is already installed"
+    return
+  }
   ^sudo -v
   log info "Installing brew"
   http get "https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh" | bash
