@@ -42,7 +42,7 @@ fish_config() {
 
   log "Linking ($DOT_DIR/fish/config.fish) -> ($HOME/.config/fish/config.fish)"
   mkdir -p ~/.config/fish 2>/dev/null || true
-  ln -sf "$DOT_DIR/fish/config.fish" ~/.config/fish/config.fish
+  ln -sf "${DOT_DIR}/fish/config.fish" "${HOME}/.config/fish/config.fish"
 
   log "Setting fish as default shell..."
   sudo chsh -s "$(which fish)" "$USER"
