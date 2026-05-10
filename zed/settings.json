@@ -37,8 +37,8 @@
   "buffer_font_size": 15,
   "theme": {
     "mode": "system",
-    "light": "Catppuccin Latte (Blur)",
-    "dark": "Catppuccin Mocha (Blur)",
+    "light": "Everforest Light Hard (blur)",
+    "dark": "Everforest Dark Soft (blur)",
   },
 
   "ensure_final_newline_on_save": true,

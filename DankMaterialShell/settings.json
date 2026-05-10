@@ -1,7 +1,7 @@
 {
   "currentThemeName": "dynamic",
   "currentThemeCategory": "dynamic",
-  "customThemeFile": "/home/pervez/.config/DankMaterialShell/themes/tokyoNight/theme.json",
+  "customThemeFile": "/home/pervez/.config/DankMaterialShell/themes/everforest/theme.json",
   "registryThemeVariants": {
     "rosePine": "moon",
     "catppuccin": {
@@ -44,9 +44,9 @@
   "modalAnimationSpeed": 1,
   "modalCustomAnimationDuration": 150,
   "enableRippleEffects": true,
-  "blurEnabled": false,
-  "blurForegroundLayers": true,
-  "blurLayerOutlineOpacity": 0.11,
+  "blurEnabled": true,
+  "blurForegroundLayers": false,
+  "blurLayerOutlineOpacity": 0.12,
   "blurBorderColor": "outline",
   "blurBorderCustomColor": "#ffffff",
   "blurBorderOpacity": 0.35,
@@ -183,12 +183,6 @@
   "greeterEnableFprint": false,
   "greeterEnableU2f": false,
   "greeterWallpaperPath": "",
-  "greeterUse24HourClock": true,
-  "greeterShowSeconds": false,
-  "greeterPadHours12Hour": false,
-  "greeterLockDateFormat": "",
-  "greeterFontFamily": "",
-  "greeterWallpaperFillMode": "",
   "mediaSize": 1,
   "appLauncherViewMode": "list",
   "spotlightModalViewMode": "list",
@@ -199,7 +193,9 @@
   "sortAppsAlphabetically": false,
   "appLauncherGridColumns": 4,
   "spotlightCloseNiriOverview": true,
-  "spotlightSectionViewModes": {},
+  "spotlightSectionViewModes": {
+    "apps": "list"
+  },
   "appDrawerSectionViewModes": {},
   "niriOverviewOverlayEnabled": true,
   "dankLauncherV2Size": "compact",
@@ -277,6 +273,10 @@
   "qtThemingEnabled": false,
   "syncModeWithPortal": true,
   "terminalsAlwaysDark": false,
+  "muxType": "tmux",
+  "muxUseCustomCommand": false,
+  "muxCustomCommand": "",
+  "muxSessionFilter": "",
   "runDmsMatugenTemplates": true,
   "matugenTemplateGtk": true,
   "matugenTemplateNiri": true,
@@ -396,9 +396,7 @@
   "updaterTerminalAdditionalParams": "",
   "displayNameMode": "system",
   "screenPreferences": {
-    "wallpaper": [
-      "all"
-    ]
+    "wallpaper": ["all"]
   },
   "showOnLastDisplay": {},
   "niriOutputSettings": {},
@@ -414,20 +412,10 @@
       "name": "Main Bar",
       "enabled": true,
       "position": 0,
-      "screenPreferences": [
-        "all"
-      ],
+      "screenPreferences": ["all"],
       "showOnLastDisplay": true,
-      "leftWidgets": [
-        "launcherButton",
-        "workspaceSwitcher",
-        "focusedWindow"
-      ],
-      "centerWidgets": [
-        "music",
-        "clock",
-        "weather"
-      ],
+      "leftWidgets": ["launcherButton", "workspaceSwitcher", "focusedWindow"],
+      "centerWidgets": ["music", "clock", "weather"],
       "rightWidgets": [
         "systemTray",
         "clipboard",
@@ -503,9 +491,7 @@
   "desktopClockY": -1,
   "desktopClockWidth": 280,
   "desktopClockHeight": 180,
-  "desktopClockDisplayPreferences": [
-    "all"
-  ],
+  "desktopClockDisplayPreferences": ["all"],
   "systemMonitorEnabled": false,
   "systemMonitorShowHeader": true,
   "systemMonitorTransparency": 0.8,
@@ -542,15 +528,17 @@
   "systemMonitorY": -1,
   "systemMonitorWidth": 320,
   "systemMonitorHeight": 480,
-  "systemMonitorDisplayPreferences": [
-    "all"
-  ],
+  "systemMonitorDisplayPreferences": ["all"],
   "systemMonitorVariants": [],
   "desktopWidgetPositions": {},
   "desktopWidgetGridSettings": {},
   "desktopWidgetInstances": [],
   "desktopWidgetGroups": [],
-  "builtInPluginSettings": {},
+  "builtInPluginSettings": {
+    "dms_settings_search": {
+      "trigger": "?"
+    }
+  },
   "clipboardEnterToPaste": false,
   "launcherPluginVisibility": {},
   "launcherPluginOrder": [],
