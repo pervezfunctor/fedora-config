@@ -2,12 +2,6 @@
 
 ## Bootstrap
 
-First install all updates and reboot your computer.
-
-```bash
-sudo dnf upgrade --offline
-```
-
 Run the following bootstrap script
 
 ```sh
@@ -25,22 +19,28 @@ echo $shell
 If fish shell is not the default, use the following command.
 
 ```sh
-chsh -s $(which fish) $user
+chsh -s $(which fish)
 ```
 
-## Setup commands
-
-Use the following interactive script install additional software(docker, vscode, libvirt, niri etc).
+If you like bash, then add the following lines to your `.bashrc`
 
 ```sh
-~/.fedora-config/scripts/setup.nu
+source ~/.fedora-config/bash/bashrc
 ```
 
-Install desktop applications with [flatpak](https://flathub.org/en)).
+## Development Tools
 
 ```sh
-setup.nu flatpak
-flatpak install --user flathub com.google.Chrome
+setup.nu dev
+```
+
+## Virtual Machines
+
+```sh
+setup.nu incus install
+setup.nu incus install post   # after reboot
+setup.nu incus <name>         # one of debian, fedora, ubuntu, tumbleweed
+setup.nu incus ssh <name>
 ```
 
 ## Niri setup
@@ -51,7 +51,7 @@ Currently this repository uses latest versions of niri and dms using copr packag
 setup.nu niri
 ```
 
-It's extremely important that you open dms settings(Super+comma) from the top bar and at least change
+It's extremely important that you open dms settings from the top bar and at least change
 
 - Power settings(monitor and system sleep)
 - Wallpaper
@@ -75,4 +75,13 @@ Some important keybindings
 - Switch Focus - Super+<Arrow Key>
 - Move Window - Super+Shift+<Arrow Key>
 - Switch Workspace - Super+<Number>
-- Move Window to Workspace - Super+Shift+<number>
+- Move Window to Workspace - Super+Shift
+
+### Miscellaneous
+
+```sh
+setup.nu apps         # install obsidian and other flatpak apps
+setup.nu ui kitty     # install kitty terminal
+setup.nu vscode       # install and configure vscode
+setup.nu libvirt      # install and configure libvirt
+```

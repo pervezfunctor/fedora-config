@@ -31,10 +31,11 @@ pixi_install() {
   has_cmd pixi || die "Failed to install pixi"
 
   log "Installing pixi packages..."
-  pixi global install nushell starship
+  pixi global install nushell starship carapace
+  has_cmd fish || pixi global install fish
 }
 
-fish_config() {
+fish_install() {
   log "Configuring fish shell..."
 
   log "Trashing existing config.fish...(use trash-restore to restore)"
@@ -45,17 +46,20 @@ fish_config() {
   ln -sf "${DOT_DIR}/fish/config.fish" "${HOME}/.config/fish/config.fish"
 
   log "Setting fish as default shell..."
-  sudo chsh -s "$(which fish)" "$USER"
+  if sudo chsh -s "$(which fish)" "$USER"; then
+    log "Successfully set fish as default shell"
+  else
+    log "Failed to set fish as default shell"
+    log "Run 'sudo chsh -s $(which fish) $USER' to set it manually"
+  fi
 }
 
-dotfiles_clone() {
-  has_cmd git || die "git is not installed. Quitting."
-
+dotfiles_install() {
   if [ ! -d "$DOT_DIR" ]; then
+    has_cmd git || die "git is not installed. Quitting."
     log "Cloning dotfiles..."
     git clone https://github.com/pervezfunctor/fedora-config "$DOT_DIR" || die "git clone failed"
   fi
-  [ -d "$DOT_DIR" ] || die "$DOT_DIR directory not found. Quitting."
 }
 
 system_install() {
@@ -63,21 +67,50 @@ system_install() {
   sudo dnf update --refresh -y
 
   log "Installing system dependencies..."
-  sudo dnf install -y git which tar unzip less curl fish trash-cli
+  sudo dnf install -y git which fish curl wget bat tar duf fd gcc gdu fzf gh \
+    htop less libatomic make pipx plocate rclone ripgrep rsync shfmt tmux jq \
+    tealdeer trash-cli ugrep unzip yq zstd shellcheck difftastic zoxide eza
+
+  tldr --update || true
+  sudo updatedb || true
 }
+
+help() {
+  echo "Usage: $0 [command]..."
+  echo ""
+  echo "Commands:"
+  echo "  system    - Install system dependencies"
+  echo "  pixi      - Install pixi"
+  echo "  dotfiles  - Clone dotfiles"
+  echo "  fish      - Install fish shell"
+  echo ""
+}
+
 main() {
   export PATH="/home/linuxbrew/.linuxbrew/bin:$HOME/.pixi/bin:$PATH"
+
+  if [ ! $# -eq 0 ]; then
+    if [ "$1" = "help" ]; then
+      help
+      return
+    fi
+
+    for arg in "$@"; do
+      "${arg}_install" || true
+    done
+    return
+  fi
+
   log "Fedora Config Setup..."
 
   has_cmd dnf && system_install
+  dotfiles_install
+  fish_install
   pixi_install
-  dotfiles_clone
-  fish_config
 
   echo ""
-  log "Shell configuration complete."
-  log "Use ~/.fedora-config/scripts/setup.nu for further setup."
-  echo ""
+  log "Fedora Configuration complete."
+  echo "Use setup.nu for further configuration."
 }
 
 main "$@"

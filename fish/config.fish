@@ -18,8 +18,7 @@ fish_add_path --global --move \
   $HOME/bin \
   $HOME/.pixi/bin \
   $HOME/.local/bin \
-  $HOME/.cargo/bin \
-  $HOME/.local/kitty.app/bin
+  $HOME/.cargo/bin
 
 function has_cmd
   type -q $argv[1]

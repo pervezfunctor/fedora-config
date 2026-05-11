@@ -1,0 +1,20 @@
+export DOT_DIR="$HOME/.fedora-config"
+
+if [ -z "$XDG_DATA_DIRS" ]; then
+  export XDG_DATA_DIRS="/usr/local/share:/usr/share"
+fi
+export XDG_DATA_DIRS="$HOME/.local/share/flatpak/exports/share:$XDG_DATA_DIRS"
+
+export PATH="$HOME/.local/share/flatpak/exports/bin:$DOT_DIR/scripts:$HOME/bin:$HOME/.pixi/bin:$HOME/.local/bin:$HOME/.cargo/bin:$PATH"
+
+if ! [[ $- == *i* ]]; then
+  return
+fi
+
+if [ -f /home/linuxbrew/.linuxbrew/bin/brew ]; then
+  eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+fi
+
+if command -v starship &>/dev/null; then
+  eval "$(starship init bash)"
+fi

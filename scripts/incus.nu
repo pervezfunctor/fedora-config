@@ -1,7 +1,33 @@
 #!/usr/bin/env nu
 
-def main [] {
-  main help
+use std/log
+use lib.nu *
+
+const incus_config = path self incus.yml
+
+export def "main install" [] {
+  log info "Installing incus"
+  si ["incus" "incus-tools"]
+
+  log info "Adding user to incus groups"
+  do -i {
+    sudo usermod -aG incus $env.USER
+    sudo usermod -aG incus-admin $env.USER
+  }
+
+  log info "Enabling incus socket"
+  do -i { sudo systemctl enable --now incus.socket }
+
+  log info "Configuring firewalld for incus"
+  do -i {
+    sudo firewall-cmd --zone=trusted --change-interface=incusbr0 --permanent
+    sudo firewall-cmd --reload
+  }
+
+  log info $"Initializing incus admin with ($incus_config)"
+  do -i { open --raw $incus_config | ^sg incus-admin -- incus admin init --preseed }
+
+  log info "Incus configured. Reboot your system and use incus.nu script."
 }
 
 def "main list" [] {
@@ -14,37 +40,6 @@ def "main list images" [] {
 
 def "main search" [query: string] {
   incus image list images: | find $query | find "/cloud"
-}
-
-def "main help" [] {
-  print $"Usage: incus.nu <command>
-Commands:
-  post-setup      Steps after installing incus and reboot
-  list            List running instances
-  list images     List available cloud images
-
-  ssh <name>      SSH into a VM instance
-  destroy <name>  Stop and delete a VM instance
-  search <query>  Search cloud images by keyword
-
-  debian       Create a Debian VM with cloud-init
-  ubuntu       Create an Ubuntu VM with cloud-init
-  fedora       Create a Fedora VM with cloud-init
-  tumbleweed   Create an openSUSE Tumbleweed VM with cloud-init
-"
-
-}
-
-def get-pubkey [ssh_key: string] {
-  if ($ssh_key | is-empty) {
-    let pubkey_path = $"($env.HOME)/.ssh/id_ed25519.pub"
-    if not ($pubkey_path | path exists) {
-      ^ssh-keygen -t ed25519 -f $"($env.HOME)/.ssh/id_ed25519" -q -N ""
-    }
-    open $pubkey_path | str trim
-  } else {
-    $ssh_key
-  }
 }
 
 def launch-vm [
@@ -108,11 +103,35 @@ def "main destroy" [name: string] {
   incus delete $name
 }
 
-def "main post-setup" [] {
+def "main install post" [] {
   do -i { sudo systemctl enable --now incus.socket }
   do -i { incus admin init }
   do -i {
     sudo firewall-cmd --zone=trusted --change-interface=incusbr0 --permanent
     sudo firewall-cmd --reload
   }
+}
+
+def "main help" [] {
+  print $"Usage: incus.nu <command>
+Commands:
+  install         Install and configure incus
+  install post      Steps after installing incus and reboot
+
+  list            List running instances
+  list images     List available cloud images
+  search <query>  Search cloud images by keyword
+
+  debian       Create a Debian VM with cloud-init
+  ubuntu       Create an Ubuntu VM with cloud-init
+  fedora       Create a Fedora VM with cloud-init
+  tumbleweed   Create an openSUSE Tumbleweed VM with cloud-init
+
+  ssh <name>      SSH into a VM instance
+  destroy <name>  Stop and delete a VM instance
+"
+}
+
+def main [] {
+  main help
 }
