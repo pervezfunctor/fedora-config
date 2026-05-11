@@ -45,8 +45,15 @@ fish_install() {
   mkdir -p ~/.config/fish 2>/dev/null || true
   ln -sf "${DOT_DIR}/fish/config.fish" "${HOME}/.config/fish/config.fish"
 
+  log "Adding fish to /etc/shells if not present..."
+  local fish_path
+  fish_path="$(which fish)"
+  if ! grep -qxF "$fish_path" /etc/shells 2>/dev/null; then
+    echo "$fish_path" | sudo tee -a /etc/shells >/dev/null
+  fi
+
   log "Setting fish as default shell..."
-  if sudo chsh -s "$(which fish)" "$USER"; then
+  if sudo chsh -s "$fish_path" "$USER"; then
     log "Successfully set fish as default shell"
   else
     log "Failed to set fish as default shell"
