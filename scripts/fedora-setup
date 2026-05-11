@@ -53,11 +53,6 @@ pixi_install() {
   log "Installing pixi."
   curl -fsSL https://pixi.sh/install.sh | sh
   has_cmd pixi || die "Failed to install pixi"
-
-  log "Installing pixi packages..."
-  pixi global install nushell starship carapace
-
-  has_cmd rpm-ostree && pixi global install go-shfmt "${COMMON_PACKAGES[@]}"
 }
 
 fish_install() {
@@ -105,6 +100,13 @@ system_install() {
   sudo updatedb || true
 }
 
+packages_install() {
+  log "Installing pixi packages..."
+  pixi global install nushell starship carapace
+
+  has_cmd rpm-ostree && pixi global install go-shfmt "${COMMON_PACKAGES[@]}"
+}
+
 help() {
   local name
   name="$(basename "$0")"
@@ -140,6 +142,7 @@ main() {
   has_cmd dnf && system_install
   dotfiles_install
   pixi_install
+  packages_install
   fish_install
 
   log "╔══════════════════════════════════════╗"
