@@ -107,9 +107,29 @@ Some important keybindings
 - Switch Workspace - Super+<Number>
 - Move Window to Workspace - Super+Shift
 
-### Miscellaneous
+##S Miscellaneous
 
 ```sh
 setup.nu apps         # install obsidian and other flatpak apps
 setup.nu libvirt      # install and configure libvirt
+```
+
+## Bluefin
+
+First switch to devmode
+
+```sh
+ujust devmode
+```
+
+Restart computer and setup dev groups
+
+```sh
+ujust dx-group
+```
+
+Now run the following script
+
+```sh
+bash -c "$(curl -fsSL https://raw.githubusercontent.com/pervezfunctor/fedora-config/main/scripts/bluefin-setup)"
 ```
