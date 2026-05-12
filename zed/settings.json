@@ -16,6 +16,7 @@
     "catppuccin-icons": true,
     "docker-compose": true,
     "dockerfile": true,
+    "everforest": true,
     "fish": true,
     "kdl": true,
     "make": true,

@@ -14,7 +14,7 @@ def "main docker" [] {
 }
 
 def "main zed" [] {
-  if (has-cmd zed) {
+  if (has-cmd ~/.local/bin/zed) {
     log info "zed is already installed"
     return
   }
