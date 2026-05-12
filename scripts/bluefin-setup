@@ -42,8 +42,8 @@ dotfiles_install() {
 }
 
 shell_install() {
-  ujust bluefin-cli
-  brew install nushell duf gdu shellcheck shfmt difftastic
+  brew install nushell gdu shellcheck shfmt difftastic atuin bash-preexec direnv \
+    duf dysk eza fd gh yq ripgrep bat starship tealdeer trash-cli ugrep zoxide
 }
 
 help() {
@@ -60,7 +60,6 @@ help() {
 
 main() {
   export PATH="/home/linuxbrew/.linuxbrew/bin:$HOME/.pixi/bin:$PATH"
-
 
   if [ ! $# -eq 0 ]; then
     case "$1" in
