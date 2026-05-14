@@ -2,6 +2,9 @@
 
 set -Eeuo pipefail
 
+# trap 'echo "Error on line $LINENO: $BASH_COMMAND"' ERR
+trap 'rc=$?; echo "ERROR rc=$rc line=$LINENO cmd=$BASH_COMMAND" >&2' ERR
+
 readonly REPO_NAME="fedora-config"
 readonly DOT_DIR="$HOME/.${REPO_NAME}"
 
@@ -47,27 +50,35 @@ has_cmd() {
 }
 
 pixi_install() {
-  has_cmd pixi && return 0
+  if has_cmd pixi; then
+    return 0
+  fi
   has_cmd curl || die "curl is not installed. Quitting."
 
   log "Installing pixi."
   curl -fsSL https://pixi.sh/install.sh | sh
+
   has_cmd pixi || die "Failed to install pixi"
+  log "pixi installation done!"
 }
 
 fish_install() {
   log "Configuring fish shell..."
 
   log "Trashing existing config.fish...(use trash-restore to restore)"
+  has_cmd trash || die "trash not installed."
   trash ~/.config/fish/config.fish || true
 
   log "Linking ($DOT_DIR/fish/config.fish) -> ($HOME/.config/fish/config.fish)"
-  mkdir -p ~/.config/fish 2>/dev/null || true
+  mkdir -p "$HOME/.config/fish"
   ln -sf "${DOT_DIR}/fish/config.fish" "${HOME}/.config/fish/config.fish"
 
   log "Adding fish to /etc/shells if not present..."
   local fish_path
-  fish_path="$(which fish)"
+  if ! fish_path="$(command -v fish)"; then
+    die "fish executable not found"
+  fi
+
   if ! grep -qxF "$fish_path" /etc/shells 2>/dev/null; then
     echo "$fish_path" | sudo tee -a /etc/shells >/dev/null
   fi
@@ -86,6 +97,7 @@ dotfiles_install() {
     has_cmd git || die "git is not installed. Quitting."
     log "Cloning dotfiles..."
     git clone https://github.com/pervezfunctor/fedora-config "$DOT_DIR" || die "git clone failed"
+    log "dotfiles installation done!"
   fi
 }
 
@@ -98,13 +110,16 @@ system_install() {
 
   tldr --update || true
   sudo updatedb || true
+  log "system installation done!"
 }
 
 packages_install() {
   log "Installing pixi packages..."
   pixi global install nushell starship carapace
-
-  has_cmd rpm-ostree && pixi global install go-shfmt "${COMMON_PACKAGES[@]}"
+  if has_cmd rpm-ostree; then
+    pixi global install go-shfmt "${COMMON_PACKAGES[@]}"
+  fi
+  log "packages installation done!"
 }
 
 help() {
@@ -123,7 +138,7 @@ help() {
 main() {
   export PATH="/home/linuxbrew/.linuxbrew/bin:$HOME/.pixi/bin:$PATH"
 
-  if [ ! $# -eq 0 ]; then
+  if (($# > 0)); then
     case "$1" in
     help | --help | -h)
       help
@@ -132,14 +147,18 @@ main() {
     esac
 
     for arg in "$@"; do
-      "${arg}_install" || true
+      if ! "${arg}_install"; then
+        die "Failed: ${arg} install"
+      fi
     done
     return
   fi
 
   log "Fedora Config Setup..."
 
-  has_cmd dnf && system_install
+  if has_cmd dnf; then
+    system_install
+  fi
   dotfiles_install
   pixi_install
   packages_install
