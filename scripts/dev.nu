@@ -45,6 +45,11 @@ def "main uv" [] {
 
   log info "Installing uv"
   ^curl -LsSf https://astral.sh/uv/install.sh | sh
+
+  if not (has-cmd pipx) {
+    log info "Installing pipx"
+    ~/.local/bin/uv tool install pipx
+  }
 }
 
 def "main vp" [] {
