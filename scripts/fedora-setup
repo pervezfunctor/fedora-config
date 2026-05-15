@@ -17,6 +17,7 @@ readonly COMMON_PACKAGES=(
   fzf
   gh
   htop
+  micro
   rclone
   ripgrep
   rsync
