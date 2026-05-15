@@ -68,7 +68,7 @@ def "main wm" [] {
     "lshw"
     "mate-polkit"
     "mpv"
-    "nautilus"
+    "thunar"
     "ncurses"
     "pipewire"
     "pipewire-gstreamer"
