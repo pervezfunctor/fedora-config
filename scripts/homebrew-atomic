@@ -1,0 +1,140 @@
+set -euo pipefail -o errtrace
+
+IFS=$'\n\t'
+
+readonly HOMEBREW_DIR="/var/home/linuxbrew"
+readonly BREW_PREFIX="$HOMEBREW_DIR/.linuxbrew"
+readonly PROFILE_FILE="/etc/profile.d/homebrew.sh"
+
+log() {
+  printf "\033[1;34m🚀 %s\033[0m\n" "$*"
+}
+
+error() {
+  printf "\033[1;31m🔥 %s\033[0m\n" "$*" >&2
+}
+
+die() {
+  error "$*"
+  exit 1
+}
+
+has_cmd() {
+  command -v "$1" >/dev/null 2>&1
+}
+
+get_user_info() {
+  local user_name
+  user_name=${SUDO_USER:-$(logname 2>/dev/null || echo "$USER")}
+
+  if ! id -u "$user_name" >/dev/null 2>&1; then
+    die "User '$user_name' does not exist"
+  fi
+
+  echo "$user_name"
+}
+
+setup_homebrew_directory() {
+  local user_name="$1"
+
+  log "Setting up Homebrew directory: $HOMEBREW_DIR"
+
+  if [[ ! -d "$HOMEBREW_DIR" ]]; then
+    sudo mkdir -p "$HOMEBREW_DIR" || die "Failed to create Homebrew directory"
+    log "Created Homebrew directory"
+  else
+    log "Homebrew directory already exists"
+  fi
+
+  sudo chown -R "$user_name":"$user_name" "$HOMEBREW_DIR" ||
+    die "Failed to set directory ownership"
+
+  log "Homebrew directory ready"
+}
+
+install_homebrew() {
+  local user_name="$1"
+
+  log "Installing Homebrew for user: $user_name"
+
+  if [[ -x "$BREW_PREFIX/bin/brew" ]]; then
+    log "Homebrew already installed"
+  else
+    log "Cloning Homebrew repository"
+
+    sudo -u "$user_name" bash -c "
+      set -euo pipefail
+      git clone --depth=1 https://github.com/Homebrew/brew \"$BREW_PREFIX\"
+    " || die "Failed to clone Homebrew"
+  fi
+
+  log "Updating Homebrew"
+
+  sudo -u "$user_name" bash -c "
+    set -euo pipefail
+    eval \"\$($BREW_PREFIX/bin/brew shellenv)\"
+    brew update --quiet
+  " || die "Failed to update Homebrew"
+
+  log "Homebrew installation complete"
+}
+
+setup_profile_snippet() {
+  log "Configuring profile snippet: $PROFILE_FILE"
+
+  local snippet="eval \"\$($BREW_PREFIX/bin/brew shellenv)\""
+
+  # If file exists and contains correct snippet, skip
+  if sudo test -f "$PROFILE_FILE"; then
+    if sudo grep -Fq "$snippet" "$PROFILE_FILE"; then
+      log "Profile snippet already exists"
+      return 0
+    fi
+    log "Updating existing snippet"
+  fi
+
+  # Write snippet
+  echo "$snippet" | sudo tee "$PROFILE_FILE" >/dev/null ||
+    die "Failed to write profile snippet"
+
+  sudo chmod 644 "$PROFILE_FILE"
+
+  log "Profile snippet installed"
+}
+
+verify_installation() {
+  local user_name="$1"
+
+  log "Verifying Homebrew installation"
+
+  sudo -u "$user_name" bash -c "
+    set -euo pipefail
+    source \"$PROFILE_FILE\"
+    brew --version >/dev/null
+  " || die "Homebrew verification failed"
+
+  log "Homebrew verification successful"
+}
+
+main() {
+  log "Starting Homebrew installation"
+
+  has_cmd git
+
+  local user_name
+  user_name=$(get_user_info)
+
+  setup_homebrew_directory "$user_name"
+  install_homebrew "$user_name"
+  setup_profile_snippet
+  verify_installation "$user_name"
+
+  log "Homebrew installed at $BREW_PREFIX"
+  log "Logout/login or source your shell to activate brew."
+}
+
+has_cmd brew && die "Homebrew is already installed. Exiting."
+has_cmd /home/linuxbrew/.linuxbrew/bin/brew && die "Homebrew is already installed. Exiting."
+has_cmd rpm-ostree || die "Not an atomic system. Exiting."
+
+main "$@"
