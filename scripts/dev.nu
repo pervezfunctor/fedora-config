@@ -35,6 +35,7 @@ def "main rust" [] {
 
   log info "Installing rustup"
   ^curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
+  path add $"($env.HOME)/.cargo/bin"
 }
 
 def "main uv" [] {
@@ -61,12 +62,14 @@ def "main vp" [] {
   log info "Installing vp"
   curl -fsSL https://vite.plus | bash
   path add $"($env.HOME)/.vite-plus/bin"
+  print $"($env.PATH)"
 
   log info "Installing node"
   ~/.vite-plus/bin/vp env install latest
 }
 
 def "main ai" [] {
+  path add $"($env.HOME)/.vite-plus/bin"
   if not (has-cmd npm) {
     main vp
   }
@@ -101,6 +104,7 @@ Run without arguments to install all \(rust, uv, vp\)."
 }
 
 def main [] {
+  bootstrap
   main rust
   main uv
   main vp

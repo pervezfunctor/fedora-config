@@ -103,10 +103,12 @@ export def touch-files [dir: string, files: list<string>] {
 export def --env bootstrap [] {
   path add $env.DOT_DIR
   path add "/home/linuxbrew/.linuxbrew/bin"
-
+  path add $"($env.HOME)/.vite-plus/bin"
+  path add $"($env.DOT_DIR)/scripts"
   for p in [
     "bin"
     ".pixi/bin"
+    ".cargo/bin"
     ".local/bin"
   ] {
     path add ($env.HOME | path join $p)
