@@ -2,6 +2,7 @@
 
 use std/log
 use std/util "path add"
+use std/util *
 
 export def "log+" [msg: string] {
   let colored = $"(ansi green)📝 ($msg)(ansi reset)"
@@ -181,7 +182,7 @@ export def "fonts" [] {
 
 export def stow [...args: string] {
   for arg in $args {
-    nu $"($env.DOT_DIR)/scripts/stow.nu" $arg
+    stow config $arg
   }
 }
 

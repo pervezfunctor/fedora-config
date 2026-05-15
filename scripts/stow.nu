@@ -93,11 +93,11 @@ def link-all [source: string, target: string] {
   }
 }
 
-export def "main config" [package: string] {
+def "main config" [package: string] {
   link-all ($env.DOT_DIR | path join $package) ($env.HOME | path join ".config" $package)
 }
 
-export def "main home" [package: string] {
+def "main home" [package: string] {
   link-all ($env.DOT_DIR | path join $package) $env.HOME
 }
 
@@ -114,4 +114,12 @@ Run without a command to stow package to ~/.config \(same as config\)."
 
 def main [package: string] {
   main config $package
+}
+
+export def "stow config" [package: string] {
+  main config $package
+}
+
+export def "stow home" [package: string] {
+  main home $package
 }

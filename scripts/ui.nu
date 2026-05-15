@@ -52,7 +52,6 @@ def "main wm" [] {
     "fuzzel"
     "fwupd"
     "gcr"
-    "gcr"
     "gnome-keyring"
     "gnome-keyring-pam"
     "google-noto-color-emoji-fonts"
