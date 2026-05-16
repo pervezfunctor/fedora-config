@@ -53,6 +53,7 @@ is_fedora() {
 dotfiles_install() {
   if [ -d "$DOT_DIR" ]; then
     log "$DOT_DIR already exists. Skipping."
+    return
   fi
 
   has_cmd git || {
