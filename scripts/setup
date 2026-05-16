@@ -496,7 +496,6 @@ cmd_dev_ai() {
 
   local npm_pkgs=(
     "@google/gemini-cli"
-    "@mermaid-js/mermaid-cli"
     "opencode-ai"
     "@openai/codex"
     "@augmentcode/auggie"
