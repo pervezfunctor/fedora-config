@@ -111,7 +111,7 @@ fish_install() {
   fi
 
   log "Deploying fish config..."
-  "$DOT_DIR/scripts/setup" deploy fish
+  ln -sf ~/.fedora-config/fish/config.fish ~/.config/fish/config.fish
 }
 
 docker_install() {
