@@ -387,8 +387,9 @@ gnome_ptyxis() {
 fonts_install() {
   has_cmd brew || brew_install
   log "Installing fonts..."
-  brew install --cask font-jetbrains-mono-nerd-font font-fontawesome font-monaspice-nerd-font || true
-  fc-cache -fv
+  if brew install --cask font-jetbrains-mono-nerd-font font-fontawesome font-monaspice-nerd-font; then
+    fc-cache -f || true
+  fi
 }
 
 gnome_packages() {
