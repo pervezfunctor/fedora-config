@@ -64,8 +64,6 @@ system_install() {
     make
     ninja
     nushell
-    python3-pipx
-    python3-uv
     rclone
     ripgrep
     rsync
@@ -111,9 +109,6 @@ fish_install() {
     log "Failed to set fish as default shell"
     log "Run 'sudo chsh -s $(which fish) $USER' to set it manually"
   fi
-
-  log "Installing carapace..."
-  curl termux.carapace.sh | sh
 
   log "Deploying fish config..."
   "$DOT_DIR/scripts/setup" deploy fish
