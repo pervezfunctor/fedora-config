@@ -25,12 +25,5 @@
   "update.mode": "manual",
   "window.titleBarStyle": "custom",
   "workbench.colorTheme": "Catppuccin Mocha",
-  "workbench.sideBar.location": "right",
-  "workbench.startupEditor": "none",
-  "terminal.integrated.commandsToSkipShell": [
-    "kilo-code.new.agentManagerOpen",
-    "kilo-code.new.agentManager.showTerminal"
-  ],
-  "C_Cpp.intelliSenseEngine": "disabled",
-  "makefile.configureOnOpen": true
+  "workbench.startupEditor": "none"
 }

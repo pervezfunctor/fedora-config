@@ -20,7 +20,7 @@ This script clones this repo to `~/.fedora-config`, and add a single line to you
 
 ## Shell
 
-Restart your terminal and execute the following script to install shell tools and setup fish as default shell(on non atomic fedora).
+Restart your terminal and execute the following script. This install shell tools and sets up fish as default.
 
 ```sh
 setup shell
@@ -38,15 +38,9 @@ If fish shell is not the default, use the following command.
 chsh -s $(which fish)
 ```
 
-If you like bash, then run the following line to update your `.bashrc`
-
-```sh
-echo 'source ~/.fedora-config/bash/bashrc' >> ~/.bashrc
-```
-
 ## Development Tools
 
-Following script will install node with vite plus, Rust with rustup, uv for Python.
+Install node(vite+), Rust(rustup), Python(uv).
 
 ```sh
 setup dev
@@ -84,7 +78,7 @@ Create a Debian VM with
 vm debian         # one of debian, fedora, ubuntu, tumbleweed and arch
 ```
 
-Wait for a few minutes(for cloud-init to finish). Then list all VMs, confirm they have IPv4 address assigned and SSH into the one you just created.
+Wait for a few minutes(for cloud-init to finish), list all VMs, confirm they have IPv4 address assigned and SSH into the one you just created.
 
 ```sh
 vm list
@@ -99,7 +93,7 @@ vm help
 
 ## Gnome setup
 
-To setup gnome, and use scrolling layout(paperwm), use the following script
+To setup gnome almost like niri, and use scrolling layout(paperwm), use the following script
 
 ```sh
 setup gnome

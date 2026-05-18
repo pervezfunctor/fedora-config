@@ -39,7 +39,7 @@
   "theme": {
     "mode": "system",
     "light": "Everforest Light Hard (blur)",
-    "dark": "Everforest Dark Hard (blur)",
+    "dark": "DankShell Dark",
   },
 
   "ensure_final_newline_on_save": true,

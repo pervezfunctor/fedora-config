@@ -1,4 +1,6 @@
-gnome_create_shortcut() {
+#!/usr/bin/env bash
+
+gnome_shortcut() {
   local name="$1"
   local command="$2"
   local shortcut="$3"
@@ -35,3 +37,9 @@ gnome_create_shortcut() {
 
   log "Created: $name → $command [$shortcut]"
 }
+
+main() {
+  gnome_shortcut "$@"
+}
+
+main "$@"
